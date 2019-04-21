@@ -12,14 +12,18 @@ import os
 import collections
 
 # 词频统计函数（使用内置模块collections实现，输出结果按词频降序排列）
+
+
 def count_feq_by_collections(s):
-    s_list = s.read().replace('\n',';').split(';')
+    s_list = s.read().replace('\n', ';').split(';')
     [s_list.remove(item) for item in s_list if item in ',.，。！”“']
     # 利用collections.Counter函数统计个数
     word_dict = collections.Counter(s_list)
     return word_dict
 
-# 词频统计函数（使用字典实现，输出结果未按词频降序排列）
+# 词频统计函数（使用字典实现，输出结果按词频降序排列）
+
+
 def count_feq_by_dict(word_list):
     # 初始化字典变量
     word_dict = {}
@@ -28,7 +32,11 @@ def count_feq_by_dict(word_list):
             word_dict[word] = 1
         else:
             word_dict[word] += 1
-    return word_dict
+    # 按字典值倒序排序
+    sorted_word_dict = sorted(
+        word_dict.items(), key=lambda x: x[1], reverse=True)
+    return dict(sorted_word_dict)   # 用到了在特殊情况下元组转换为字典
+
 
 try:
     # root = os.path.realpath(__file__)
@@ -42,15 +50,15 @@ try:
     input_file_path = os.path.join(input_path, input_filename)
 
     fileContent = open(input_file_path, 'r')
-    word_list = fileContent.read().rstrip('\n').replace('\n',';').split(';')
+    word_list = fileContent.read().rstrip('\n').replace('\n', ';').split(';')
 
-    word_dict =  count_feq_by_dict(word_list)
+    word_dict = count_feq_by_dict(word_list)
 
     # 输出结果文件
     with open(os.path.join(output_path, output_filename), 'w') as output_file:
         for key in word_dict:
             print(key, word_dict[key])
-            output_file.write(key +' '+ str(word_dict[key]) + '\n')
+            output_file.write(key + ' ' + str(word_dict[key]) + '\n')
 
     # print(count_feq_by_collections(fileContent))
 finally:
